@@ -241,24 +241,25 @@ from fpdf import FPDF
 from io import BytesIO
 
 # ✅ Build the PDF
+from fpdf import FPDF
+from io import BytesIO
+
 pdf = FPDF()
+
+# ✅ Add Unicode TTF (must exist in your project folder!)
+pdf.add_font('DejaVu', '', 'DejaVuSans.ttf', uni=True)
+
 pdf.add_page()
 pdf.set_auto_page_break(auto=True, margin=15)
+pdf.set_font("DejaVu", size=12)
 
-pdf.set_font("Times", 'B', 16)
-pdf.cell(0, 10, "Your Novel Conversation", ln=True, align='C')
-pdf.ln(10)
-
-pdf.set_font("Times", '', 12)
 for part in all_content:
     pdf.multi_cell(0, 10, part)
     pdf.ln(5)
 
-# ✅ ✅ Correct: get bytes instead of passing BytesIO directly
-pdf_bytes = pdf.output(dest='S').encode('latin-1')
+pdf_bytes = pdf.output(dest='S').encode('latin-1')  # still fine — only the PDF stream is binary
 pdf_buffer = BytesIO(pdf_bytes)
 
-# ✅ Add your download button
 st.download_button(
     "📄 Download Styled PDF",
     pdf_buffer,
