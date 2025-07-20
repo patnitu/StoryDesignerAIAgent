@@ -117,6 +117,7 @@ if mode == "Quick Story/Poem/Joke":
 # ✅ NOVEL DESIGNER MODE — FULL FIXED BLOCK
 
 if mode == "Novel Designer":
+    all_content = []
     st.header("📖 Novel Designer")
 
     uploaded_file = st.file_uploader("Upload your last saved novel part (.txt):", type=["txt"])
@@ -214,7 +215,7 @@ if mode == "Novel Designer":
             break
 
     # ✅ 👉 Combine all messages for download
-    all_content = []
+    
     for m in st.session_state.messages:
         for k, v in m.items():
             if isinstance(v, dict):
