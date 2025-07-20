@@ -46,6 +46,7 @@ if "rerun_needed" not in st.session_state:
     st.session_state.rerun_needed = False
 
 latest = ""
+
 # -------------------------------
 # ✅ QUICK STORY MODE
 # -------------------------------
@@ -105,17 +106,17 @@ if mode == "Quick Story/Poem/Joke":
     if latest:
         st.write(latest)
         if not st.session_state.awaiting_clarification:
-            st.download_button("📥 Download Final", latest, file_name="final_story.txt")
+            st.download_button(
+                "📥 Download Final",
+                latest,
+                file_name="final_story.txt"
+            )
     else:
         st.info("Describe your idea above to start.")
 
 # -------------------------------
 # ✅ NOVEL DESIGNER MODE
 # -------------------------------
-# Inside your main Streamlit app — replace only the NOVEL DESIGNER MODE block
-
-# ✅ NOVEL DESIGNER MODE — FULL FIXED BLOCK
-
 if mode == "Novel Designer":
     all_content = []
     st.header("📖 Novel Designer")
@@ -214,8 +215,7 @@ if mode == "Novel Designer":
         if latest_plot or latest_story:
             break
 
-    # ✅ 👉 Combine all messages for download
-    
+    # ✅ Combine all messages for download (only once)
     for m in st.session_state.messages:
         for k, v in m.items():
             if isinstance(v, dict):
@@ -223,10 +223,16 @@ if mode == "Novel Designer":
                     all_content.append(f"[Plot Idea]\n{v['plot_idea']}")
                 if "story" in v:
                     all_content.append(f"[Story Part]\n{v['story']}")
+
     combined_text = "\n\n".join(all_content) if all_content else "No parts yet."
 
-    # ✅ Always show the current conversation download button
-    st.download_button("⬇️ Download Current Conversation", combined_text, file_name="novel_conversation.txt")
+    # ✅ Current conversation download
+    st.download_button(
+        "⬇️ Download Current Conversation",
+        combined_text,
+        file_name="novel_conversation.txt",
+        key="novel_convo_download"
+    )
 
     if st.session_state.awaiting_clarification == "suggest" and latest_plot:
         st.write(latest_plot)
@@ -235,37 +241,12 @@ if mode == "Novel Designer":
     else:
         st.info("Upload your last part and describe the next plot!")
 
-    # ✅ Final download button stays the same!
-    
-for m in st.session_state.messages:
-    for k, v in m.items():
-        if isinstance(v, dict):
-            if "plot_idea" in v:
-                all_content.append(f"[Plot Idea]\n{v['plot_idea']}")
-            if "story" in v:
-                all_content.append(f"[Story Part]\n{v['story']}")
-
-combined_text = "\n\n".join(all_content) if all_content else "No parts yet."
-
-# ✅ Always show the current conversation download button
-st.download_button(
-    "⬇️ Download Current Conversation",
-    combined_text,
-    file_name="novel_conversation.txt"
-)
-
-if st.session_state.awaiting_clarification == "suggest" and latest_plot:
-    st.write(latest_plot)
-elif latest_story:
-    st.write(latest_story)
-else:
-    st.info("Upload your last part and describe the next plot!")
-
-# ✅ Final download button stays the same!
-if not st.session_state.awaiting_clarification:
-    if latest_story:
-        st.download_button(
-            "📥 Download Final Part",
-            latest_story,
-            file_name="novel_part.txt"
-        )
+    # ✅ Final download button
+    if not st.session_state.awaiting_clarification:
+        if latest_story:
+            st.download_button(
+                "📥 Download Final Part",
+                latest_story,
+                file_name="novel_part.txt",
+                key="novel_final_download"
+            )
