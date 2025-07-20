@@ -237,39 +237,35 @@ if mode == "Novel Designer":
 
     # ✅ Final download button stays the same!
     
-from fpdf import FPDF
-from io import BytesIO
+for m in st.session_state.messages:
+    for k, v in m.items():
+        if isinstance(v, dict):
+            if "plot_idea" in v:
+                all_content.append(f"[Plot Idea]\n{v['plot_idea']}")
+            if "story" in v:
+                all_content.append(f"[Story Part]\n{v['story']}")
 
-# ✅ Build the PDF
-from fpdf import FPDF
-from io import BytesIO
-
-pdf = FPDF()
-
-# ✅ Add Unicode TTF (must exist in your project folder!)
-pdf.add_font('DejaVu', '', 'DejaVuSans.ttf', uni=True)
-
-pdf.add_page()
-pdf.set_auto_page_break(auto=True, margin=15)
-pdf.set_font("DejaVu", size=12)
-
-for part in all_content:
-    pdf.multi_cell(0, 10, part)
-    pdf.ln(5)
-
-pdf_bytes = pdf.output(dest='S').encode('latin-1')  # still fine — only the PDF stream is binary
-pdf_buffer = BytesIO(pdf_bytes)
-
-st.download_button(
-    "📄 Download Styled PDF",
-    pdf_buffer,
-    file_name="novel_conversation.pdf",
-    mime="application/pdf"
-)
-
-if not st.session_state.awaiting_clarification:
-        if latest_story:
-            combined_text = "\n\n".join(all_content) if all_content else "No parts yet."
+combined_text = "\n\n".join(all_content) if all_content else "No parts yet."
 
 # ✅ Always show the current conversation download button
-            st.download_button("⬇️ Download Current Conversation", combined_text, file_name="novel_conversation.txt")
+st.download_button(
+    "⬇️ Download Current Conversation",
+    combined_text,
+    file_name="novel_conversation.txt"
+)
+
+if st.session_state.awaiting_clarification == "suggest" and latest_plot:
+    st.write(latest_plot)
+elif latest_story:
+    st.write(latest_story)
+else:
+    st.info("Upload your last part and describe the next plot!")
+
+# ✅ Final download button stays the same!
+if not st.session_state.awaiting_clarification:
+    if latest_story:
+        st.download_button(
+            "📥 Download Final Part",
+            latest_story,
+            file_name="novel_part.txt"
+        )
