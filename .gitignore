@@ -1,0 +1,12 @@
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore local virtual environment folder
+.venv/
+env/
+venv/
+
+# Ignore VSCode or PyCharm settings (optional)
+.vscode/
+.idea/
