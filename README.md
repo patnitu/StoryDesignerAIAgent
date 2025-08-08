@@ -13,7 +13,7 @@ Built with **LangChain**, **OpenAI**, and **Streamlit**, it allows writers and h
 
 ## 🚀 **Live Demo**
 
-👉 [Try it now on Streamlit](https://storydesigneraiagent-j6vj6fzk8fl9rdpf2gvovi.streamlit.app/)
+👉 [Try it now on Streamlit](https://myagent-01.streamlit.app/)
 
 ---
 
